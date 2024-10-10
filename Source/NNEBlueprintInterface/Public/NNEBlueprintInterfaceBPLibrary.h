@@ -108,12 +108,12 @@ class UNNEBlueprintInterfaceBPLibrary : public UBlueprintFunctionLibrary
 		meta = (DisplayName = "Load Model From File", Keywords = "NNEInterface NNE Model"),
 		Category = "NNEInterface")
 	static FNNDataModel FromONNXFile( FString filePath, bool& success);
-	/*
-		UFUNCTION(BlueprintCallable,
-			meta = (DisplayName = "Load Model From File", Keywords = "NNEInterface NNE Model"),
-			Category = "NNEInterface")
-		FNNDataModel FromBytes( TArray<uint8> bytes, FString runtimeName = "CPU");
-	*/
+
+	UFUNCTION(BlueprintCallable,
+		meta = (DisplayName = "Load Model From byte array", Keywords = "NNEInterface NNE Model"),
+		Category = "NNEInterface")
+	static FNNDataModel FromONNXBytes( TArray<uint8> byteArray, bool& success);
+	
 	
 	UFUNCTION(BlueprintCallable,
 		meta = (DisplayName = "Create NN model from ModelData", Keywords = "NNEInterface NNE Model"),
@@ -124,6 +124,8 @@ class UNNEBlueprintInterfaceBPLibrary : public UBlueprintFunctionLibrary
 		meta = (DisplayName = "Get Model IO info", Keywords = "NNEInterface NNE Model"),
 		Category = "NNEInterface")
 	static FNNIOInfo GetModelIOInfo(FNNModelInstance modelInstance);
+
+	
 
 	
 	

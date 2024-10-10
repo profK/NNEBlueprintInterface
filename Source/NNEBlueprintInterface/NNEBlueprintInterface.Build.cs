@@ -30,7 +30,8 @@ public class NNEBlueprintInterface : ModuleRules
 				"Engine",
 				"InputCore",
 				"EnhancedInput",
-				"NNE"
+				"NNE",
+				"NNEEditor"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -42,7 +43,7 @@ public class NNEBlueprintInterface : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore", "NNEEditor",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

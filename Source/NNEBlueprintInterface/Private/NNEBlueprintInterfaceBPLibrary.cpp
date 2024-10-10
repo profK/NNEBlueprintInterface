@@ -1,7 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+
 #include "NNEBlueprintInterfaceBPLibrary.h"
 #include "NNEBlueprintInterface.h"
+#include "UObject/UObjectGlobals.h"
 
 UNNEBlueprintInterfaceBPLibrary::UNNEBlueprintInterfaceBPLibrary(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
@@ -41,9 +43,26 @@ FNNDataModel  UNNEBlueprintInterfaceBPLibrary::FromONNXFile(FString filePath, bo
 	return FNNDataModel(ModelData);
 }
 
+FNNDataModel UNNEBlueprintInterfaceBPLibrary::FromONNXBytes(TArray<uint8> byteArray, bool& success)
+{
+	TObjectPtr<UNNEModelData> ModelData = NewObject<UNNEModelData>();
+	ModelData->Init("onnx", MakeArrayView(byteArray.GetData(), byteArray.Num()));
+	if (ModelData.IsNull())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+			TEXT("Failed to load model data from byte array"));
+		success = false;
+	}
+	else
+	{
+		success = true;
+	}
+	return FNNDataModel(ModelData);
+}
+
 
 void  UNNEBlueprintInterfaceBPLibrary::CreateModelInstance(FNNDataModel modelData,FNNModelInstance& modelInstance,
-	bool& success)
+                                                           bool& success)
 {
 	TWeakInterfacePtr<INNERuntimeCPU> Runtime = UE::NNE::GetRuntime<INNERuntimeCPU>(FString("NNERuntimeORTCpu"));
 
@@ -80,6 +99,7 @@ void  UNNEBlueprintInterfaceBPLibrary::CreateModelInstance(FNNDataModel modelDat
 		success = false;
 		return;
 	}
+	
 	TSharedPtr<IModelInstanceCPU> ModelInstance = Model->CreateModelInstanceCPU();
 	if (!ModelInstance.IsValid())
 	{
@@ -109,6 +129,8 @@ FNNIOInfo UNNEBlueprintInterfaceBPLibrary::GetModelIOInfo(FNNModelInstance model
 	}
 	return FNNIOInfo(inputTensorInfo, outputTensorInfo);
 }
+
+
 
 
 
