@@ -131,6 +131,29 @@ FNNIOInfo UNNEBlueprintInterfaceBPLibrary::GetModelIOInfo(FNNModelInstance model
 	}
 	return FNNIOInfo(inputTensorInfo, outputTensorInfo);
 }
+TArray<float> UNNEBlueprintInterfaceBPLibrary::RunModelInstance(FNNModelInstance modelInstance, TArray<float> inputTensorData, bool& success){
+	TSharedPtr<IModelInstanceCPU> ModelInstance = modelInstance.ModelInstance;
+
+	TArray<float> outputTensorData;
+	TSharedPtr<IModelInstanceCPU> Model = modelInstance.ModelInstance;
+	TArray<FTensorBindingCPU> InputBindings;
+	TConstArrayView<FTensorBindingCPU> OutputBindings;
+	for (float inputFloat : inputTensorData) //TODO make liek output if it works
+	{
+		FTensorBindingCPU InputBinding;
+		InputBinding.Data = &inputFloat;
+		InputBinding.SizeInBytes= sizeof(float);
+		InputBindings.Add(InputBinding);
+	}
+	Model->RunSync(InputBindings,OutputBindings);
+	for (FTensorBindingCPU outputBinding : OutputBindings)
+	{
+		float* outputElement = static_cast<float*>(outputBinding.Data);
+		outputTensorData.Add(*outputElement);
+	}
+	success = true;
+	return outputTensorData;
+}
 
 
 

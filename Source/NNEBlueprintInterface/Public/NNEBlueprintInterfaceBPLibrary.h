@@ -125,7 +125,11 @@ class UNNEBlueprintInterfaceBPLibrary : public UBlueprintFunctionLibrary
 		Category = "NNEInterface")
 	static FNNIOInfo GetModelIOInfo(FNNModelInstance modelInstance);
 
-	
+	UFUNCTION(BlueprintCallable,
+		meta = (DisplayName = "Run Model Instance", Keywords = "NNEInterface NNE Model"),
+		Category = "NNEInterface")
+	static TArray<float> RunModelInstance(FNNModelInstance modelInstance, TArray<float> inputTensorData, bool& success);
+
 
 	
 	
